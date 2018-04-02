@@ -1,6 +1,8 @@
 const path = require('path'),
     glob = require('glob');
 
+const WebpackBemPlugin = require('webpack-bem-plugin');
+
 module.exports = {
     entry : glob.sync('blocks/**/*.tests/*.html').reduce((res, file) => {
         const basename = path.basename(file, '.html'),
@@ -29,12 +31,7 @@ module.exports = {
             {
                 test : /\.js$/,
                 exclude : /node_modules\/react(-dom)?/,
-                use : [{
-                    loader : 'webpack-bem-loader',
-                    options : {
-                        techs : ['js', 'css']
-                    }
-                }, 'babel-loader']
+                use : 'babel-loader'
             },
             {
                 test : /\.css$/,
@@ -42,6 +39,9 @@ module.exports = {
             }
         ]
     },
+    plugins : [
+        new WebpackBemPlugin({ techs : ['js', 'css'] })
+    ],
     resolve : {
         alias : {
             'react' : require.resolve('react/dist/react'),
